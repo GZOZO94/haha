@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+	<head>
+		<meta http-equiv="Content_Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		<title>FestScan Teszt</title>
+	</head>
+	<body ng-app="myapp" ng-controller="mycont" ng-cloak>
+		<div class="container">
+			<div class="jumbotron">
+				<h1>A kapott üzenet: <br /></h1>
+				<p>{{message}}</p>
+				<button class="btn btn-primary" ng-click="request()">Üzenet kérése</button>
+			</div>
+		</div>
+		<script>
+			var myapp=angular.module('myapp',[]);
+			myapp.controller('mycont',function($scope,$http){
+				$scope.request=function(){
+					let data={'id':'FestScanApp','gps':{'x':70,'y':2.3},'radius':50,'type':'Party'};
+					$http({method: 'POST', url: 'https://festscan.herokuapp.com/FestScan/getEventsByType', data: data}).then(function(res){
+						if(res.data.length!==0){
+							$scope.message=res.data[0].gps_x;
+						}
+						else{
+							$scope.message='Nincs találat';
+						}
+					});
+					/*$http.post('https://festscan.herokuapp.com/FestScan/getEventsByType',data).then(function(res){
+						if(res.data.length!==0){
+							$scope.message=res.data[0].gps_x;
+						}
+						else{
+							$scope.message='Nincs találat';
+						}
+					})*/
+				};
+			});
+		</script>
+	</body>
+</html>
